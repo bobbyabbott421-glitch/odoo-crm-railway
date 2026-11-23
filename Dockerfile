@@ -26,5 +26,4 @@ RUN pip install --no-cache-dir -r /opt/odoo/requirements.txt
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
-VOLUME ["/var/lib/odoo"]
 CMD ["/entrypoint.sh"]
