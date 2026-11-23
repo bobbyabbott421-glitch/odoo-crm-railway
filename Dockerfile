@@ -1,4 +1,4 @@
-# Odoo 20.0 at the pinned base commit (the fork's 20.0, before any tool's changes), for Railway.
+# Odoo 20.0 at the Factory CRM offline branch tip (eval/factory-crm-offline), for Railway.
 # Nothing here is committed to the fork; the build fetches the exact commit.
 FROM python:3.12-slim-bookworm
 
@@ -11,8 +11,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 ARG ODOO_REPO=https://github.com/bobbyabbott421-glitch/odoo.git
-# Head of the fork's 20.0, and the base commit every tool run branched from
-ARG ODOO_COMMIT=ee8c13eaa57177845e36b2aee2d8717d013310dd
+# eval/factory-crm-offline tip: "[IMP] droid-wiki: refresh for offline CRM", 77 commits on top of 20.0 base ee8c13eaa57
+ARG ODOO_COMMIT=15a98a3a66ddf908653c36322249be1a91d43517
 
 RUN git init -q /opt/odoo && cd /opt/odoo \
     && git remote add origin "$ODOO_REPO" \

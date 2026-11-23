@@ -9,9 +9,9 @@ set -eu
 : "${ODOO_DB_PASSWORD:?Set ODOO_DB_PASSWORD on the service}"
 : "${ODOO_ADMIN_PASSWD:?Set ODOO_ADMIN_PASSWD on the service}"
 
-DB="${ODOO_DB:-crm_base}"
-# Its own role, so it can share a Postgres with the Codex service without sharing a password.
-ODOO_DB_USER="${ODOO_DB_USER:-odoo_base}"
+DB="${ODOO_DB:-crm_factory}"
+# Its own role, so it can share a Postgres with the other Odoo services without sharing a password.
+ODOO_DB_USER="${ODOO_DB_USER:-odoo_factory}"
 ADMIN_DB="${PGDATABASE:-postgres}"
 
 # Odoo refuses to run as the 'postgres' superuser, so use a dedicated role.
