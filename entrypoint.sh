@@ -14,8 +14,14 @@ ODOO_DB_USER="${ODOO_DB_USER:-odoo}"
 ADMIN_DB="${PGDATABASE:-postgres}"
 
 # Odoo refuses to run as the 'postgres' superuser, so use a dedicated role.
-if ! psql -h "$PGHOST" -p "$PGPORT" -U "$PGUSER" -d "$ADMIN_DB" -tAc \
+# Create it on first boot; on every later boot, reset its password to ODOO_DB_PASSWORD,
+# so a changed variable or a role left from an earlier attempt can't lock Odoo out.
+if psql -h "$PGHOST" -p "$PGPORT" -U "$PGUSER" -d "$ADMIN_DB" -tAc \
         "SELECT 1 FROM pg_roles WHERE rolname = '$ODOO_DB_USER'" | grep -q 1; then
+    psql -h "$PGHOST" -p "$PGPORT" -U "$PGUSER" -d "$ADMIN_DB" -v ON_ERROR_STOP=1 -q -c \
+        "ALTER ROLE \"$ODOO_DB_USER\" WITH LOGIN CREATEDB PASSWORD '$ODOO_DB_PASSWORD'"
+    echo "Role $ODOO_DB_USER exists; password set from ODOO_DB_PASSWORD"
+else
     psql -h "$PGHOST" -p "$PGPORT" -U "$PGUSER" -d "$ADMIN_DB" -v ON_ERROR_STOP=1 -c \
         "CREATE ROLE \"$ODOO_DB_USER\" LOGIN CREATEDB PASSWORD '$ODOO_DB_PASSWORD'"
 fi
